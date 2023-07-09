@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../model/category.dart';
 import '../../shared/style/componenets/category_item.dart';
 
@@ -13,7 +14,7 @@ class CategoriesScreen extends StatelessWidget {
         background: Color(0xFFC91C22)),
     CategoryModel(
         imagePath: 'assets/images/Politics.png',
-        title: 'Politics',
+        title: 'General',
         background: Color(0xFF003E90)),
     CategoryModel(
         imagePath: 'assets/images/health.png',
@@ -25,7 +26,7 @@ class CategoriesScreen extends StatelessWidget {
         background: Color(0xFFCF7E48)),
     CategoryModel(
         imagePath: 'assets/images/environment.png',
-        title: 'Enviroment',
+        title: 'Technology',
         background: Color(0xFF4882CF)),
     CategoryModel(
         imagePath: 'assets/images/science.png',

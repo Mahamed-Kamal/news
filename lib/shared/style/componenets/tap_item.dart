@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:news/api/model/sources_responses/Source.dart';
 
 class TapItem extends StatelessWidget {
   bool selected;
-  String source;
+  Source? source;
+
   TapItem(this.selected, this.source);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,10 +19,11 @@ class TapItem extends StatelessWidget {
           color: Theme.of(context).primaryColor,
         ),
       ),
-      child: Text(source,
-          style: Theme.of(context).textTheme.titleSmall!.copyWith(
-            color: selected? Colors.white:Theme.of(context).primaryColor,
-          ),
+      child: Text(
+        source?.name ?? "",
+        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              color: selected ? Colors.white : Theme.of(context).primaryColor,
+            ),
       ),
     );
   }

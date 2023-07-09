@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:news/model/category.dart';
-import '../../screens/articles_screen/articles_screen.dart';
+
 import '../../screens/categories_screen/categories_screen.dart';
+import '../../screens/home_news_fragment/home_news_fragment.dart';
 import '../../screens/setting_screen/setting_screen.dart';
-
-
-
 
 class HomeLayout extends StatefulWidget {
   static const String routeName = 'Home-Layout';
@@ -87,13 +85,23 @@ class _HomeLayoutState extends State<HomeLayout> {
         ),
         appBar: AppBar(
           title: Text(
-            selectedCategory == null?selectedSetting?'Setting':'News App':selectedCategory!.title,
+            selectedCategory == null
+                ? selectedSetting
+                    ? 'Setting'
+                    : 'News App'
+                : selectedCategory!.title,
           ),
-          actions:selectedCategory ==null?null: [
-            IconButton(onPressed: (){}, icon: Icon(Icons.search_rounded))
-          ],
+          actions: selectedCategory == null
+              ? null
+              : [
+                  IconButton(onPressed: () {}, icon: Icon(Icons.search_rounded))
+                ],
         ),
-        body:selectedCategory==null?selectedSetting?SettingScreen():CategoriesScreen(SelectCategory):ArticlesScreen(),
+        body: selectedCategory == null
+            ? selectedSetting
+                ? SettingScreen()
+                : CategoriesScreen(SelectCategory)
+            : HomeNewsFragment(selectedCategory!),
       ),
     );
   }
