@@ -6,8 +6,9 @@ import 'news_list_fragment.dart';
 
 class ArticlesScreen extends StatefulWidget {
   List<Source>? sources;
+  String query;
 
-  ArticlesScreen(this.sources);
+  ArticlesScreen(this.sources, this.query);
 
   @override
   State<ArticlesScreen> createState() => _ArticlesScreenState();
@@ -36,7 +37,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                     .toList() ??
                 [],
           ),
-          NewsListFragment(widget.sources?[selectedIndex]),
+          NewsListFragment(widget.sources?[selectedIndex], widget.query),
         ],
       ),
     );

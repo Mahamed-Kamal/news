@@ -40,18 +40,15 @@ class MyTheme{
       titleMedium: TextStyle(
         color: Color(0xFF79828B),
         fontSize: 10,
-      ),
-      titleLarge: TextStyle(
-        fontSize: 13,
-        color: Color(0xFFA3A3A3)
-      ),
-      headlineMedium: TextStyle(
-         fontSize: 24,
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-      ),
-    )
-
-
-  );
+          ),
+          titleLarge: TextStyle(fontSize: 13, color: Color(0xFFA3A3A3)),
+          headlineMedium: TextStyle(
+            fontSize: 24,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+          headlineSmall: TextStyle(
+            fontSize: 14,
+            color: Color(0xFF42505C),
+          )));
 }
