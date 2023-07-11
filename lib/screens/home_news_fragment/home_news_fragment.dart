@@ -7,13 +7,16 @@ import '../../api/model/sources_responses/SourcesResponse.dart';
 
 class HomeNewsFragment extends StatelessWidget {
   CategoryModel category;
+  String query;
 
-  HomeNewsFragment(this.category);
+  HomeNewsFragment(this.category, this.query);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<SourcesResponse>(
-      future: ApiManager.getNewsSources(category.title),
+      future: ApiManager.getNewsSources(
+        category.id,
+      ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -41,7 +44,7 @@ class HomeNewsFragment extends StatelessWidget {
           );
         }
         ;
-        return ArticlesScreen(response?.sources);
+        return ArticlesScreen(response?.sources, query);
       },
     );
   }

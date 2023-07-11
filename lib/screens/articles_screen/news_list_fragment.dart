@@ -7,13 +7,14 @@ import '../../shared/style/componenets/article_item.dart';
 
 class NewsListFragment extends StatelessWidget {
   Source? source;
+  String query;
 
-  NewsListFragment(this.source);
+  NewsListFragment(this.source, this.query);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<NewsResponse>(
-      future: ApiManager.getNews(source?.id ?? ''),
+      future: ApiManager.getNews(sourceId: source?.id ?? '', q: query),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(

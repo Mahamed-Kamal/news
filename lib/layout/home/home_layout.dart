@@ -15,6 +15,8 @@ class HomeLayout extends StatefulWidget {
 class _HomeLayoutState extends State<HomeLayout> {
   CategoryModel? selectedCategory;
   bool selectedSetting = false;
+  bool isSearch = false;
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +27,26 @@ class _HomeLayoutState extends State<HomeLayout> {
         fit: BoxFit.cover,
       )),
       child: Scaffold(
-        drawer: Drawer(
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 110,
-                color: Theme.of(context).primaryColor,
-                alignment: Alignment.center,
-                child: Text('News App!',style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white)),
-              ),
-              SizedBox(height: 10,),
-              InkWell(
+        drawer: isSearch
+            ? null
+            : Drawer(
+                child: Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 110,
+                      color: Theme.of(context).primaryColor,
+                      alignment: Alignment.center,
+                      child: Text('News App!',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium!
+                              .copyWith(color: Colors.white)),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    InkWell(
                 onTap: () {
                   selectedCategory = null;
                   selectedSetting =false;
@@ -84,24 +94,67 @@ class _HomeLayoutState extends State<HomeLayout> {
           ),
         ),
         appBar: AppBar(
-          title: Text(
-            selectedCategory == null
-                ? selectedSetting
-                    ? 'Setting'
-                    : 'News App'
-                : selectedCategory!.title,
-          ),
-          actions: selectedCategory == null
-              ? null
-              : [
-                  IconButton(onPressed: () {}, icon: Icon(Icons.search_rounded))
-                ],
+          title: isSearch
+              ? TextField(
+                  controller: controller,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.black,
+                      ),
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40)),
+                      prefixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            controller.clear();
+                            isSearch = false;
+                          });
+                        },
+                        icon: Icon(Icons.clear,
+                            color: Theme.of(context).primaryColor),
+                      ),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {});
+                        },
+                        icon: Icon(Icons.search,
+                            color: Theme.of(context).primaryColor),
+                      ),
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontSize: 20),
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: 'Search...'),
+                )
+              : Text(
+                  selectedCategory == null
+                      ? selectedSetting
+                          ? 'Setting'
+                          : 'News App'
+                      : selectedCategory!.title,
+                ),
+          actions: !isSearch
+              ? selectedCategory != null
+                  ? [
+                      IconButton(
+                          onPressed: () {
+                            // showSearch(context: context, delegate: SearchNews());
+                            setState(() {
+                              isSearch = true;
+                            });
+                          },
+                          icon: Icon(Icons.search_rounded))
+                    ]
+                  : null
+              : null,
         ),
         body: selectedCategory == null
             ? selectedSetting
                 ? SettingScreen()
                 : CategoriesScreen(SelectCategory)
-            : HomeNewsFragment(selectedCategory!),
+            : HomeNewsFragment(selectedCategory!, controller.text),
       ),
     );
   }
@@ -109,8 +162,6 @@ class _HomeLayoutState extends State<HomeLayout> {
   void SelectCategory(CategoryModel category){
     selectedCategory = category;
     setState(() {
-
     });
-
   }
 }
