@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:news/api/api_manager.dart';
-import 'package:news/api/model/news_responses/NewsResponse.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../api/model/sources_responses/Source.dart';
 import '../../shared/style/componenets/article_item.dart';
+import 'news_list_viewModel.dart';
 
 class NewsListFragment extends StatelessWidget {
   Source? source;
@@ -11,21 +11,32 @@ class NewsListFragment extends StatelessWidget {
 
   NewsListFragment(this.source, this.query);
 
+  var viewModel = NewsListViewModel();
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<NewsResponse>(
-      future: ApiManager.getNews(sourceId: source?.id ?? '', q: query),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (snapshot.hasError) {
+    viewModel.loadNews(sourceId: source?.id ?? '', query: query);
+    return BlocBuilder<NewsListViewModel, NewsListState>(
+      bloc: viewModel,
+      builder: (context, state) {
+        if (state is LoadingState) {
           return Center(
             child: Column(
               children: [
-                Text(snapshot.error.toString()),
+                CircularProgressIndicator(),
+                SizedBox(
+                  height: 12,
+                ),
+                Text(state.loadingMessage ?? '')
+              ],
+            ),
+          );
+        }
+        if (state is ErrorState) {
+          return Center(
+            child: Column(
+              children: [
+                Text(state.errorMessage ?? ''),
                 ElevatedButton(
                     onPressed: () {},
                     child: Text('Error loading data..Try Again'))
@@ -33,29 +44,20 @@ class NewsListFragment extends StatelessWidget {
             ),
           );
         }
-        var response = snapshot.data;
-        if (response?.status == 'error') {
-          return Center(
-            child: Column(
-              children: [
-                Text(response?.message ?? ''),
-                ElevatedButton(
-                    onPressed: () {}, child: Text('Server error..Try Again'))
-              ],
+        if (state is SuccessState) {
+          return Expanded(
+            child: ListView.separated(
+              padding: EdgeInsets.all(12),
+              itemBuilder: (context, index) =>
+                  ArticleItem(state.articles[index]),
+              separatorBuilder: (context, index) => SizedBox(
+                height: 10,
+              ),
+              itemCount: state.articles.length ?? 0,
             ),
           );
         }
-        return Expanded(
-          child: ListView.separated(
-            padding: EdgeInsets.all(12),
-            itemBuilder: (context, index) =>
-                ArticleItem(response?.articles?[index]),
-            separatorBuilder: (context, index) => SizedBox(
-              height: 10,
-            ),
-            itemCount: response?.articles?.length ?? 0,
-          ),
-        );
+        return Container();
       },
     );
   }
